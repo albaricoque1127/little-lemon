@@ -5,7 +5,7 @@ A React Native app built with Expo to showcase a dynamic restaurant menu using S
 ## 🚀 Tech Stack
 
 - React Native + Expo SDK  
-- TypeScript  
+- JavaScript
 - SQLite (Expo SQLite)  
 - Metro Bundler  
 - Figma for UI planning  
@@ -24,11 +24,11 @@ npx expo start
 
 Use the QR code with Expo Go on your device, or press `a` or `i` for Android/iOS simulator.
 
-Optional: Run SQLite setup scripts in `App.tsx` or your data initialization module to seed demo menu items and categories.
+Optional: Run SQLite setup scripts in `App.js` or your data initialization module to seed demo menu items and categories.
 
 ## 🎨 Features (in progress)
 
-- [x] Clean project scaffolding using Expo's blank TypeScript template  
+- [x] Clean project scaffolding using Expo's blank JavaScript template  
 - [ ] Dynamic menu UI with `SectionList`  
 - [ ] Safe SQL parameter binding and search/filter logic  
 - [ ] Grid-aligned, accessible components styled via custom design tokens  
@@ -42,7 +42,7 @@ Optional: Run SQLite setup scripts in `App.tsx` or your data initialization modu
 📁 db/            # SQLite logic and schema setup  
 📁 screens/       # Feature views like Menu, Details  
 📁 theme/         # Colors, spacing, typography system  
-App.tsx          # Entry point  
+App.js          # Entry point  
 ```
 
 ## 🤝 Contributing
