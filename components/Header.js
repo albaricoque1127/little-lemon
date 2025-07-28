@@ -1,25 +1,23 @@
 import { View, Image, StyleSheet, Platform, SafeAreaView } from 'react-native';
 
 export default function Header({ user }) {
-  return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <View style={styles.spacer} />
-        <Image
-          source={require('../assets/Logo.png')}
-          style={styles.logo}
-          resizeMode="contain"
-        />
-        <View style={styles.spacer}>
-          {user?.profilePic && (
-            <Image
-              source={require('../assets/Profile.png')}
-              style={styles.profilePic}
-            />
-          )}
-        </View>
+  return (    
+    <View style={styles.header}>
+      <View style={styles.spacer} />
+      <Image
+        source={require('../assets/Logo.png')}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+      <View style={styles.spacer}>
+        {user?.profilePic && (
+          <Image
+            source={require('../assets/Profile.png')}
+            style={styles.profilePic}
+          />
+        )}
       </View>
-    </SafeAreaView>
+    </View>    
   );
 }
 

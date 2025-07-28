@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import { useState } from 'react';
@@ -20,41 +20,41 @@ export default function Onboarding({ user }) {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Header user={user} />
-      <ScrollView style={styles.scrollView}>
-        <Hero />      
-        <View style={styles.contentContainer}>
-          <Text style={styles.sectionTitle}>CREATE AN ACCOUNT</Text>
-          
-          <View style={styles.form}>
-            <Text style={styles.label}>First Name*</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.firstName}
-              onChangeText={(text) => setFormData({...formData, firstName: text})}
-              placeholder="Enter your first name"
-            />
+        <ScrollView style={styles.scrollView} keyboardDismissMode="on-drag">
+          <Hero />      
+          <View style={styles.contentContainer}>
+            <Text style={styles.sectionTitle}>CREATE AN ACCOUNT</Text>
+            
+            <View style={styles.form}>
+              <Text style={styles.label}>First Name*</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.firstName}
+                onChangeText={(text) => setFormData({...formData, firstName: text})}
+                placeholder="Enter your first name"
+              />
 
-            <Text style={styles.label}>Last Name*</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.lastName}
-              onChangeText={(text) => setFormData({...formData, lastName: text})}
-              placeholder="Enter your last name"
-            />
+              <Text style={styles.label}>Last Name*</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.lastName}
+                onChangeText={(text) => setFormData({...formData, lastName: text})}
+                placeholder="Enter your last name"
+              />
 
-            <Text style={styles.label}>Email Address*</Text>
-            <TextInput
-              style={styles.input}
-              value={formData.email}
-              onChangeText={(text) => setFormData({...formData, email: text})}
-              placeholder="Enter your email"
-              keyboardType="email-address"
-            />
+              <Text style={styles.label}>Email Address*</Text>
+              <TextInput
+                style={styles.input}
+                value={formData.email}
+                onChangeText={(text) => setFormData({...formData, email: text})}
+                placeholder="Enter your email"
+                keyboardType="email-address"
+              />
+            </View>
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
       
       <View style={styles.footer}>
         <Pressable
@@ -75,7 +75,7 @@ export default function Onboarding({ user }) {
             </Text>
         </Pressable>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 

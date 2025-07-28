@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 import { useFonts } from 'expo-font';
 import Onboarding from './screens/Onboarding';
 
@@ -14,9 +14,9 @@ export default function App() {
   });
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Onboarding user={{ profilePic: true }} />
-    </View>
+    </SafeAreaView>
   );
 }
 
