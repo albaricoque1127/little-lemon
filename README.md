@@ -29,7 +29,8 @@ Optional: Run SQLite setup scripts in `App.js` or your data initialization modul
 ## 🎨 Features (in progress)
 
 - [x] Clean project scaffolding using Expo's blank JavaScript template  
-- [x] Onboarding screen with `TextInput`
+- [x] Onboarding screen with `TextInput` validation
+- [ ] `AsyncStodage` to store user details
 - [ ] Dynamic menu UI with `SectionList`  
 - [ ] Safe SQL parameter binding and search/filter logic  
 - [ ] Grid-aligned, accessible components styled via custom design tokens  
