@@ -1,6 +1,8 @@
-import { View, Image, StyleSheet, Platform, SafeAreaView } from 'react-native';
+import { View, Image, StyleSheet, Platform, Pressable} from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Header({ user }) {
+export default function Header({ user, navigation }) {
+  console.log('Header user state:', user);
   return (    
     <View style={styles.header}>
       <View style={styles.spacer} />
@@ -10,11 +12,13 @@ export default function Header({ user }) {
         resizeMode="contain"
       />
       <View style={styles.spacer}>
-        {user?.profilePic && (
-          <Image
-            source={require('../assets/Profile.png')}
-            style={styles.profilePic}
-          />
+        {user && (
+          <Pressable onPress={() => navigation.navigate('Profile')}>
+            <Image
+              source={require('../assets/Profile.png')}
+              style={styles.profilePic}
+            />
+          </Pressable>
         )}
       </View>
     </View>    
@@ -32,11 +36,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingBottom: 8,
     paddingHorizontal: 25,
+    paddingTop: 40,
     
   },
   logo: {
-    height: 48,
+    height: 32,
     alignSelf: 'center',
+    marginTop: 'auto',
   },
   profilePic: {
     width: 48,

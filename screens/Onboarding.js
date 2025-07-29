@@ -4,7 +4,7 @@ import Hero from '../components/Hero';
 import { useState } from 'react';
 import { fonts, sizes, textCase } from '../styles/typography';
 
-export default function Onboarding({ user }) {
+export default function Onboarding({ user, navigation }) {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -12,50 +12,100 @@ export default function Onboarding({ user }) {
   });
 
   const [pressed, setPressed] = useState(false);
-  const disabled = !formData.firstName || !formData.lastName || !formData.email;
+
+  const [firstNameTouched, setFirstNameTouched] = useState(false);
+  const [lastNameTouched, setLastNameTouched] = useState(false);
+  const [emailTouched, setEmailTouched] = useState(false);
+
+  const nameRegex = /^[a-zA-ZÀ-ÿ\u00C0-\u017F\s'-]+$/;
+
+  const isValidFirstName = (firstName) => {
+    return firstName.trim().length > 0 && nameRegex.test(firstName);
+  };
+
+  const isValidLastName = (lastName) => {
+    return lastName.trim().length > 0 && nameRegex.test(lastName);
+  };
+
+  const isValidEmail = (email) => {
+    return email.trim().length > 0 &&
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const disabled = !isValidFirstName(formData.firstName) ||
+                  !isValidLastName(formData.lastName) ||
+                  !isValidEmail(formData.email);
 
   const handleSubmit = () => {
-    // Handle form submission logic here
     console.log('Form submitted:', formData);
+    user = !user; // Simulate user being set
+    console.log('User state updated:', user);
+    navigation.navigate('Profile'); // Navigate to Profile screen
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <View style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <Header user={user} />
-        <ScrollView style={styles.scrollView} keyboardDismissMode="on-drag">
+        <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={40} // Adjust if header is overlapping
+    >
+        <ScrollView 
+          style={styles.scrollView} 
+          keyboardDismissMode="on-drag"
+          showsVerticalScrollIndicator={true}
+          indicatorStyle='white'>
+
           <Hero />      
           <View style={styles.contentContainer}>
             <Text style={styles.sectionTitle}>CREATE AN ACCOUNT</Text>
             
             <View style={styles.form}>
-              <Text style={styles.label}>First Name*</Text>
+              <Text style={styles.label}>First Name*</Text>              
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  firstNameTouched && !isValidFirstName(formData.firstName) && styles.inputError
+                ]}
                 value={formData.firstName}
                 onChangeText={(text) => setFormData({...formData, firstName: text})}
+                onBlur={() => setFirstNameTouched(true)}
                 placeholder="Enter your first name"
+                clearButtonMode="always"
               />
+
 
               <Text style={styles.label}>Last Name*</Text>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  lastNameTouched && !isValidLastName(formData.lastName) && styles.inputError
+                ]}
                 value={formData.lastName}
                 onChangeText={(text) => setFormData({...formData, lastName: text})}
+                onBlur={() => setLastNameTouched(true)}
                 placeholder="Enter your last name"
+                clearButtonMode="always"
               />
 
               <Text style={styles.label}>Email Address*</Text>
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  emailTouched && !isValidEmail(formData.email) && styles.inputError
+                ]}
                 value={formData.email}
                 onChangeText={(text) => setFormData({...formData, email: text})}
                 placeholder="Enter your email"
+                onBlur={() => setEmailTouched(true)}
                 keyboardType="email-address"
+                clearButtonMode="always"
               />
             </View>
           </View>
         </ScrollView>
-      
+      </KeyboardAvoidingView>
       <View style={styles.footer}>
         <Pressable
             disabled={disabled}
@@ -69,13 +119,14 @@ export default function Onboarding({ user }) {
                 ? styles.clicked
                 : styles.untouched,
             ]}
+            onPress={(formData.firstName && formData.lastName && formData.email) ? handleSubmit : null}
             >
             <Text style={styles.buttonText}>
                 Next
             </Text>
         </Pressable>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
 
@@ -114,7 +165,11 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 16,
     fontSize: sizes.paragraph,
-    fontFamily: fonts.body,
+    fontFamily: fonts.body,    
+  },
+  inputError: {
+  borderColor: 'red',
+  borderWidth: 1,
   },
   footer: {
     paddingHorizontal: 25,
