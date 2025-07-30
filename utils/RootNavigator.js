@@ -5,7 +5,7 @@ import Profile from '../screens/Profile';
 
 const Stack = createNativeStackNavigator();
 
-export default function RootNavigator({ isLoggedIn, setIsLoggedIn }) {
+export default function RootNavigator({ isLoggedIn, setIsLoggedIn, data }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       {isLoggedIn ? (
@@ -14,7 +14,8 @@ export default function RootNavigator({ isLoggedIn, setIsLoggedIn }) {
             <Profile 
               {...props} 
               isLoggedIn={isLoggedIn}
-              setIsLoggedIn={setIsLoggedIn} 
+              setIsLoggedIn={setIsLoggedIn}
+              data={data} 
             />
           }
         </Stack.Screen>

@@ -17,7 +17,7 @@ export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
     email: '',
   });
 
-  const [pressed, setPressed] = useState(false);
+  const [pressed, setPressed] = useState(false); // State to track button press
 
   const [firstNameTouched, setFirstNameTouched] = useState(false);
   const [lastNameTouched, setLastNameTouched] = useState(false);
@@ -63,7 +63,7 @@ export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
 };
 
   return (
-    <View style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <View style={styles.container} >
       <Header isLoggedIn={isLoggedIn} />
         <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
