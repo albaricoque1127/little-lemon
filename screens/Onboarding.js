@@ -3,8 +3,14 @@ import Header from '../components/Header';
 import Hero from '../components/Hero';
 import { useState } from 'react';
 import { fonts, sizes, textCase } from '../styles/typography';
+import { storeUserData, getUserData } from '../utils/storage';
 
-export default function Onboarding({ user, navigation }) {
+
+
+export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
+  
+
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -36,16 +42,29 @@ export default function Onboarding({ user, navigation }) {
                   !isValidLastName(formData.lastName) ||
                   !isValidEmail(formData.email);
 
-  const handleSubmit = () => {
-    console.log('Form submitted:', formData);
-    user = !user; // Simulate user being set
-    console.log('User state updated:', user);
-    navigation.navigate('Profile'); // Navigate to Profile screen
-  };
+  const handleSubmit = async () => {
+    try{
+      console.log('Form submitted:', formData);
+      const user = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        isLoggedIn: true
+      };
+
+      await storeUserData(user);
+      const userUpdate = await getUserData();
+      console.log('User data stored:', userUpdate);
+
+      setIsLoggedIn(true);
+  } catch (error) {
+    console.error('Failed to submit form:', error);
+  }
+};
 
   return (
     <View style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Header user={user} />
+      <Header isLoggedIn={isLoggedIn} />
         <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}

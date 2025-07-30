@@ -1,8 +1,8 @@
 import { View, Image, StyleSheet, Platform, Pressable} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function Header({ user, navigation }) {
-  console.log('Header user state:', user);
+export default function Header({ isLoggedIn, navigation }) {
+  console.log(`Header user state: ${isLoggedIn}`);
   return (    
     <View style={styles.header}>
       <View style={styles.spacer} />
@@ -12,7 +12,7 @@ export default function Header({ user, navigation }) {
         resizeMode="contain"
       />
       <View style={styles.spacer}>
-        {user && (
+        {isLoggedIn && (
           <Pressable onPress={() => navigation.navigate('Profile')}>
             <Image
               source={require('../assets/Profile.png')}
