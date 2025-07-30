@@ -33,7 +33,7 @@ export default function App() {
     <SafeAreaProvider>
       <View style={styles.container}>
         <NavigationContainer>
-          <RootNavigator isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} data={data} />
+          <RootNavigator isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
         </NavigationContainer>
       </View>
     </SafeAreaProvider>

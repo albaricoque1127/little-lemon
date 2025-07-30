@@ -5,7 +5,7 @@ import { fonts, sizes, textCase } from '../styles/typography';
 import { clearUserData } from '../utils/storage';
 import { useState } from 'react';
 
-export default function Profile({ setIsLoggedIn, isLoggedIn, data }) {
+export default function Profile({ setIsLoggedIn, isLoggedIn }) {
 
       const [pressed, setPressed] = useState(false); // State to track button press
     
@@ -20,7 +20,7 @@ export default function Profile({ setIsLoggedIn, isLoggedIn, data }) {
         }
     };
 
-    console.log('User data stored:', data); 
+    
 
     return (
                
