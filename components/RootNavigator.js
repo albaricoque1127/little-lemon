@@ -5,17 +5,17 @@ import Profile from '../screens/Profile';
 
 const Stack = createNativeStackNavigator();
 
-export default function RootNavigator({ isLoggedIn, setIsLoggedIn, data }) {
+export default function RootNavigator({ userData, setUserData }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      {isLoggedIn ? (
+      {userData.isLoggedIn ? (
         <Stack.Screen name="Profile">
           {props => 
             <Profile 
-              {...props} 
-              isLoggedIn={isLoggedIn}
-              setIsLoggedIn={setIsLoggedIn}
-              data={data} 
+              {...props}               
+              userData={userData}
+              setUserData={setUserData} 
+              
             />
           }
         </Stack.Screen>
@@ -24,8 +24,8 @@ export default function RootNavigator({ isLoggedIn, setIsLoggedIn, data }) {
           {props => 
             <Onboarding
               {...props} 
-              isLoggedIn={isLoggedIn}
-              setIsLoggedIn={setIsLoggedIn}
+              userData={userData}
+              setUserData={setUserData}
             />
           }
         </Stack.Screen>

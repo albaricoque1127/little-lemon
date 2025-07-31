@@ -7,20 +7,19 @@ import { storeUserData, getUserData } from '../utils/storage';
 
 
 
-export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
+export default function Onboarding({ userData, setUserData }) {
   
 
   
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    firstName: '',    
     email: '',
   });
 
   const [pressed, setPressed] = useState(false); // State to track button press
 
   const [firstNameTouched, setFirstNameTouched] = useState(false);
-  const [lastNameTouched, setLastNameTouched] = useState(false);
+  
   const [emailTouched, setEmailTouched] = useState(false);
 
   const nameRegex = /^[a-zA-ZÀ-ÿ\u00C0-\u017F\s'-]+$/;
@@ -29,17 +28,12 @@ export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
     return firstName.trim().length > 0 && nameRegex.test(firstName);
   };
 
-  const isValidLastName = (lastName) => {
-    return lastName.trim().length > 0 && nameRegex.test(lastName);
-  };
-
   const isValidEmail = (email) => {
     return email.trim().length > 0 &&
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
 
   const disabled = !isValidFirstName(formData.firstName) ||
-                  !isValidLastName(formData.lastName) ||
                   !isValidEmail(formData.email);
 
   const handleSubmit = async () => {
@@ -47,16 +41,17 @@ export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
       console.log('Form submitted:', formData);
       const user = {
         firstName: formData.firstName,
-        lastName: formData.lastName,
+        lastName: '', // lastName is not required in this step
         email: formData.email,
+        phone: '', // phone is not required in this step
         isLoggedIn: true
       };
 
       await storeUserData(user);
       const userUpdate = await getUserData();
       console.log('User data stored:', userUpdate);
-
-      setIsLoggedIn(true);
+      setUserData(userUpdate); //updates state across screens
+           
   } catch (error) {
     console.error('Failed to submit form:', error);
   }
@@ -64,7 +59,7 @@ export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
 
   return (
     <View style={styles.container} >
-      <Header isLoggedIn={isLoggedIn} />
+      <Header userData={userData} />
         <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}
@@ -92,22 +87,7 @@ export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
                 onBlur={() => setFirstNameTouched(true)}
                 placeholder="Enter your first name"
                 clearButtonMode="always"
-              />
-
-
-              <Text style={styles.label}>Last Name*</Text>
-              <TextInput
-                style={[
-                  styles.input,
-                  lastNameTouched && !isValidLastName(formData.lastName) && styles.inputError
-                ]}
-                value={formData.lastName}
-                onChangeText={(text) => setFormData({...formData, lastName: text})}
-                onBlur={() => setLastNameTouched(true)}
-                placeholder="Enter your last name"
-                clearButtonMode="always"
-              />
-
+              />                      
               <Text style={styles.label}>Email Address*</Text>
               <TextInput
                 style={[
@@ -138,7 +118,7 @@ export default function Onboarding({ isLoggedIn, setIsLoggedIn }) {
                 ? styles.clicked
                 : styles.untouched,
             ]}
-            onPress={(formData.firstName && formData.lastName && formData.email) ? handleSubmit : null}
+            onPress={(formData.firstName && formData.email) ? handleSubmit : null}
             >
             <Text style={styles.buttonText}>
                 Next

@@ -5,12 +5,13 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { getUserData } from './utils/storage';
-import RootNavigator from './utils/RootNavigator';
+import RootNavigator from './components/RootNavigator';
 
 // SplashScreen.preventAutoHideAsync(); 
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ 
+  const [userData, setUserData] = useState(null);
 
   const [fontsLoaded] = useFonts({
     'MarkaziText-Medium': require('./assets/fonts/MarkaziText-Medium.ttf'),
@@ -24,7 +25,15 @@ export default function App() {
   useEffect(() => {
     const loadUser = async () => {
       const data = await getUserData();
-      setIsLoggedIn(data?.isLoggedIn || false);
+      setUserData(data);
+      if (userData) {
+        console.log('User is logged in:', userData.isLoggedIn);
+      } else {
+        setUserData({
+          isLoggedIn: false
+        });
+        console.log('No user data found or user is not logged in');
+      }
     };
     loadUser();
   }, []);
@@ -33,7 +42,7 @@ export default function App() {
     <SafeAreaProvider>
       <View style={styles.container}>
         <NavigationContainer>
-          <RootNavigator isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          <RootNavigator userData={userData} setUserData={setUserData}/>
         </NavigationContainer>
       </View>
     </SafeAreaProvider>
