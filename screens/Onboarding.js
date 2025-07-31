@@ -46,11 +46,13 @@ export default function Onboarding({ userData, setUserData }) {
         phone: '', // phone is not required in this step
         isLoggedIn: true
       };
+      console.log('User data to be stored:', user);
 
       await storeUserData(user);
       const userUpdate = await getUserData();
       console.log('User data stored:', userUpdate);
       setUserData(userUpdate); //updates state across screens
+      console.log('User data set in state:', userData);
            
   } catch (error) {
     console.error('Failed to submit form:', error);

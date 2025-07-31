@@ -25,14 +25,14 @@ export default function App() {
   useEffect(() => {
     const loadUser = async () => {
       const data = await getUserData();
-      setUserData(data);
-      if (userData) {
-        console.log('User is logged in:', userData.isLoggedIn);
+      console.log('User data loaded:', data);
+      if (data) {
+        setUserData(data);
       } else {
+        console.log('No user data found or user is not logged in');
         setUserData({
           isLoggedIn: false
         });
-        console.log('No user data found or user is not logged in');
       }
     };
     loadUser();

@@ -4,10 +4,11 @@ import Hero from '../components/Hero';
 import { fonts, sizes, textCase } from '../styles/typography';
 import { clearUserData, getUserData, storeUserData } from '../utils/storage';
 import { useState } from 'react';
+import { YellowButton, GreenButton } from '../components/Button';
 
 export default function Profile({ userData, setUserData }) {
 
-    const [pressed, setPressed] = useState(false); // State to track button press
+    //const [pressed, setPressed] = useState(false);
     
     const [lastNameTouched, setLastNameTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
@@ -28,7 +29,7 @@ export default function Profile({ userData, setUserData }) {
     const isValidPhone = (phone) => {
         return phone.trim().length > 0 && phoneRegex.test(phone)};
 
-    const disabled = !isValidLastName(formData.lastName) ||
+    const disabledSubmit = !isValidLastName(formData.lastName) ||
                     !isValidPhone(formData.phone);
                   
 
@@ -92,34 +93,16 @@ export default function Profile({ userData, setUserData }) {
                                     style={styles.profilePic}
                                     source={require('../assets/Profile.png')}
                                     />
-                                <Pressable
-                                    onPressIn={() => setPressed(true)}
-                                    onPressOut={() => setPressed(false)}
-                                    style={( ) => [
-                                        styles.greenButton,
-                                        pressed ? styles.clicked : styles.untouched,
-                                    ]}
-                                    //onPress={}
-                                    >
-                                        <Text 
-                                            style={styles.buttonText}>
-                                            Change
-                                        </Text>
-                                </Pressable>
-                                <Pressable
-                                    onPressIn={() => setPressed(true)}
-                                    onPressOut={() => setPressed(false)}
-                                    style={( ) => [
-                                        styles.greenButton,
-                                        pressed ? styles.clicked : styles.untouched,
-                                    ]}
-                                    //onPress={}
-                                    >
-                                        <Text 
-                                            style={styles.buttonText}>
-                                            Remove
-                                        </Text>
-                                </Pressable>
+                                <GreenButton
+                                    title = "Change"
+                                    onPress={() => console.log('Change Avatar pressed')}                                                                      
+                                />
+                                <GreenButton
+                                    title = "Remove"
+                                    onPress={() => console.log('Remove Avatar pressed')}
+                                    disabled={true} // Disable for now, can be enabled later
+                                    />
+                                        
                             </View>
 
                             <Text style={styles.label}>First Name</Text>
@@ -161,19 +144,30 @@ export default function Profile({ userData, setUserData }) {
                             
                             
                         </View>
-                    
-                        <Pressable 
-                            onPressIn={() => setPressed(true)}
-                            onPressOut={() => setPressed(false)}
-                            style={( ) => [
-                                styles.button,
-                                pressed ? styles.clicked : styles.untouched,
-                            ]}
-                            onPress={handleLogout}>
-                                <Text style={styles.buttonText}>
-                                    Log Out
-                                </Text>
-                        </Pressable>
+
+                        <View style={styles.footer}>
+                            
+                            <View style={styles.profilePicContainer}>
+                                                         
+                                <GreenButton
+                                    title = "Cancel changes"
+                                    onPress={() => console.log('Changed discarded')}                                                                      
+                                />
+                                <GreenButton
+                                    title = "Save changes"
+                                    onPress={() => console.log('Changes saved')}
+                                    disabled={true} // Disable for now, can be enabled later
+                                    />
+                                        
+                            </View>
+                            
+                            <YellowButton
+                                
+                                title="Logout"
+                                onPress={handleLogout}
+                            />
+                        </View>                  
+                       
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
@@ -215,7 +209,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 16,
+        justifyContent: 'space-between',
+        width: '100%',
 
+        
     },
 
     profilePic: {
@@ -238,58 +235,10 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         borderWidth: 1,
         },
-    button: {
-        height: 35,
-        borderRadius: 16,
+    footer: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: 24,
-        paddingVertical: 8,
-        alignSelf: 'center',
-    },
-
-    untouched: {
-        backgroundColor: '#F4CE14', // bright yellow
-        opacity: 1,
-    },
-    clicked: {
-        backgroundColor: '#EE9972' //light orange,
-    },
-    disabled: {
-        backgroundColor: '#EDEFEE', // dark gray
-        
-    },
-
-    greenButton: {
-        height: 48,
-        borderRadius: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 24,
-        paddingVertical: 8,
         flex: 1,
-        marginHorizontal: 8,
     },
-
-    gUntouched: {
-        backgroundColor: '#495E57', // bright yellow
-        opacity: 1,
-    },
-    gClicked: {
-        backgroundColor: '#ffffffff', //light orange,
-        outlineColor: '#495E57',
-        outlineWidth: 1,
-    },
-    gDisabled: {
-        backgroundColor: '#EDEFEE', // dark gray
-        
-    },
-
-
-    buttonText: {
-        fontSize: sizes.categories,
-        fontFamily: fonts.categories,
-        fontWeight: 'bold',
-        color: '#333333',
-    },
+    
 });
