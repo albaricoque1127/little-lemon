@@ -5,23 +5,21 @@ import { fonts, sizes, textCase } from '../styles/typography';
 import { clearUserData, getUserData, storeUserData } from '../utils/storage';
 import { useState } from 'react';
 import { YellowButton, GreenButton } from '../components/Button';
+import { notificationOptions, makeDefaultPrefs } from '../utils/notifications';
+import EmailNotifications from '../components/EmailNotifications';
+
 
 export default function Profile({ userData, setUserData }) {
 
-    //const [pressed, setPressed] = useState(false);
-    
+    // Form validation states
     const [lastNameTouched, setLastNameTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
 
-    const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
-        email: '',
-    });
-
+    // Regular expressions for form validation
     const nameRegex = /^[a-zA-ZÀ-ÿ\u00C0-\u017F\s'-]+$/;
-    const phoneRegex = /^\d{3}-\d{3}-\d{4}$/;
+    const phoneRegex = /^(?:\+1\s?)?(?:\(?([2-9][0-9]{2})\)?[\s.-]?)([2-9][0-9]{2})[\s.-]?([0-9]{4})$/;
 
+    // Form validation functions
     const isValidLastName = (lastName) => {
         return lastName.trim().length > 0 && nameRegex.test(lastName);
     };
@@ -29,17 +27,46 @@ export default function Profile({ userData, setUserData }) {
     const isValidPhone = (phone) => {
         return phone.trim().length > 0 && phoneRegex.test(phone)};
 
-    const disabledSubmit = !isValidLastName(formData.lastName) ||
-                    !isValidPhone(formData.phone);
+    // Form state management
+   const [formData, setFormData] = useState({
+        lastName: userData.lastName || '',
+        phone:    userData.phone    || '',
+        prefs:    userData.notificationPrefs || makeDefaultPrefs(),
+        });
+    
+    // Toggle function for email notification preferences
+    const togglePref = id => {
+        setFormData(prev => ({
+            ...prev,
+            prefs: { ...prev.prefs, [id]: !prev.prefs[id] },
+        }));
+        };
+        
+    // Detect if we're in “onboarding” mode (no name & phone yet)
+    const isOnboarding = !userData.lastName && !userData.phone;
+
+    // Check if any pref actually changed
+    const prefsChanged = Object.keys(formData.prefs).some(
+        key => formData.prefs[key] !== (userData.notificationPrefs || {})[key]
+    );
+
+    // disabledSubmit logic for Submit and Cancel buttons
+    const disabledSubmit = isOnboarding
+        // onboarding: require valid name & phone
+        ? !isValidLastName(formData.lastName) || !isValidPhone(formData.phone)
+         // profile edit: require at least one pref change
+        : !prefsChanged;
                   
 
     const handleSubmit = async () => {
         try{
           console.log('Form submitted:', formData);
           const user = {
-            firstName: formData.firstName,
+            firstName: userData.firstName,
             lastName: formData.lastName,
-            email: formData.email,
+            email: userData.email,
+            phone: formData.phone,
+            notificationPrefs: formData.prefs,
             isLoggedIn: true
           };
     
@@ -52,8 +79,29 @@ export default function Profile({ userData, setUserData }) {
             console.error('Failed to submit form:', error);
         }
         };
-        
+    
+    const handleCancel = () => {
+        if (isOnboarding) {
+            // Reset everything back to blank + default prefs
+            setFormData({
+                lastName: '',
+                phone:    '',
+                prefs:    makeDefaultPrefs(),
+            });
+        } else {
+        // Only reset prefs to whatever’s stored in userData
+        setFormData(prev => ({
+            ...prev,
+            prefs: userData.notificationPrefs || makeDefaultPrefs(),
+        }));
+        }
 
+    // Clear any touched/validation flags
+    setLastNameTouched(false);
+    setPhoneTouched(false);
+  };
+        
+    // Logout function
     const handleLogout = async () => {
         try {
         await clearUserData();
@@ -107,7 +155,7 @@ export default function Profile({ userData, setUserData }) {
 
                             <Text style={styles.label}>First Name</Text>
                             <Text style={styles.input}>{userData.firstName}</Text>
-                            <Text style={styles.label}>Last Name</Text>
+                            <Text style={styles.label}>Last Name*</Text>
                             {userData.lastName ? (
                                 <Text style={styles.input}>{userData.lastName}</Text>
                             ) : (
@@ -125,9 +173,9 @@ export default function Profile({ userData, setUserData }) {
                             )}                                                  
                             <Text style={styles.label}>Email</Text>
                             <Text style={styles.input}>{userData.email}</Text>
-                            <Text style={styles.label}>Phone</Text>
+                            <Text style={styles.label}>Phone*</Text>
                             {userData.phone ? (
-                                <Text style={styles.input}>userData.phone</Text>
+                                <Text style={styles.input}>{userData.phone}</Text>
                             ):(
                                 <TextInput
                                     style={[
@@ -141,8 +189,13 @@ export default function Profile({ userData, setUserData }) {
                                     clearButtonMode="always"
                                     />
                             )}
-                            
-                            
+
+                            <EmailNotifications
+                                options={notificationOptions}
+                                prefs={formData.prefs}
+                                onToggle={togglePref}
+                                />
+
                         </View>
 
                         <View style={styles.footer}>
@@ -151,12 +204,13 @@ export default function Profile({ userData, setUserData }) {
                                                          
                                 <GreenButton
                                     title = "Cancel changes"
-                                    onPress={() => console.log('Changed discarded')}                                                                      
+                                    onPress={handleCancel}
+                                    disabled={disabledSubmit}                                                                      
                                 />
                                 <GreenButton
                                     title = "Save changes"
-                                    onPress={() => console.log('Changes saved')}
-                                    disabled={true} // Disable for now, can be enabled later
+                                    onPress={handleSubmit}
+                                    disabled={disabledSubmit} 
                                     />
                                         
                             </View>
@@ -165,6 +219,7 @@ export default function Profile({ userData, setUserData }) {
                                 
                                 title="Logout"
                                 onPress={handleLogout}
+                                style={{alignSelf: 'stretch', width: '100%'}}
                             />
                         </View>                  
                        

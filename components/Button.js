@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 16,
     alignItems: 'center',
-    height: 35,
+    justifyContent: 'center',
+    height: 48,
     alignSelf: 'center',      // ← prevents stretching
   },
     yellowPressed: {
