@@ -1,31 +1,66 @@
-import { View, Image, StyleSheet, Platform, Pressable} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { View, Image, StyleSheet, Pressable} from 'react-native';
 import Avatar from './Avatar';
+import { Ionicons } from '@expo/vector-icons';
+import React from 'react';
 
-export default function Header({  navigation, userData }) {
+
+
+export default function Header({  navigation, userData, canGoBack }) {
+
   console.log(`Header user state: ${userData.isLoggedIn}`);
+
   return (    
     <View style={styles.header}>
-      <View style={styles.spacer} />
+
+      
+      <Pressable
+        onPress={() => navigation.goBack()}
+        disabled={!canGoBack}
+        style={({ pressed }) => [
+          styles.iconButton,
+          pressed && styles.iconButtonPressed,
+          !canGoBack && styles.iconButtonDispabled,
+        ]}
+      >
+        <Ionicons name="arrow-back" style={styles.buttonIcon} size={25}/>
+      </Pressable>
+          
       <Image
         source={require('../assets/Logo.png')}
         style={styles.logo}
         resizeMode="contain"
       />
-      <View style={styles.spacer}>
-        {userData.isLoggedIn && (
-          <Pressable onPress={() => navigation.navigate('Profile')}>
-            <Avatar userData={userData} size={48}/>
-          </Pressable>
-        )}
-      </View>
+                  
+      <Pressable 
+        onPress={() => navigation.navigate('Profile')}
+        disabled={!userData.isLoggedIn}
+        style={({ pressed }) => { opacity: pressed ? 0.6 : 1 }}>
+        <Avatar userData={userData} size={40}/>
+      </Pressable>
+    
+      
     </View>    
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
-    backgroundColor: '#fff',
+   
+  iconButton: {
+    backgroundColor: '#495E57',
+    height: 36,
+    width: 36,
+    borderRadius:20,
+    justifyContent: 'center',
+    alignItems:'center'
+  },
+  iconButtonPressed:{
+    opacity: 0.7,
+  },
+  iconButtonDispabled:{
+    backgroundColor: '#ffffff'
+  },
+  buttonIcon:{    
+    color:'#ffffff',
   },
   header: {
     flexDirection: 'row',
@@ -34,7 +69,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingBottom: 8,
     paddingHorizontal: 25,
-    paddingTop: 40,
+    paddingTop: 36,
+    minHeight: 80,
     
   },
   logo: {
@@ -43,8 +79,5 @@ const styles = StyleSheet.create({
     marginTop: 'auto',
   },
   
-  spacer: {
-    flex: 1,
-    alignItems: 'flex-end',
-  },
+  
 });

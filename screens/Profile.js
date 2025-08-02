@@ -183,7 +183,7 @@ export default function Profile({ userData, setUserData }) {
     return (
                
         <View style={styles.container}>
-            <Header userData={userData} />
+            
             <KeyboardAvoidingView
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                     style={{ flex: 1 }}

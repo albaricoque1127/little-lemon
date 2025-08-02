@@ -61,12 +61,11 @@ export default function Onboarding({ userData, setUserData }) {
 
   return (
     <View style={styles.container} >
-      <Header userData={userData} />
-        <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={{ flex: 1 }}
-      keyboardVerticalOffset={40} // Adjust if header is overlapping
-    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={40} // Adjust if header is overlapping
+      >
         <ScrollView 
           style={styles.scrollView} 
           keyboardDismissMode="on-drag"

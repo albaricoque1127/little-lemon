@@ -8,6 +8,9 @@ import {fonts} from '../styles/typography';
 export default function Avatar({userData, size}){
 
     const getInitials = (firstname,lastname) => {
+        if (!lastname && !firstname) {
+            return ' ';
+        }
         if (!lastname) {
             return firstname.charAt(0).toUpperCase();
         }
@@ -31,7 +34,8 @@ export default function Avatar({userData, size}){
                     (
                         <View style={[
                             styles.placeholder, 
-                            { width: size, height: size, borderRadius: size / 2 }
+                            { width: size, height: size, borderRadius: size / 2 },
+                            !userData.isLoggedIn && {backgroundColor: '#ffffff'} 
                             ]}
                         >
                             <Text style={[
