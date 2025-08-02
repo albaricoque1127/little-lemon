@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     },
     yellowDisabled: {
         backgroundColor: '#EDEFEE',
-        opacity: 0.5,
+        
     },
     yellowButtonText: {
         fontSize: sizes.categories,

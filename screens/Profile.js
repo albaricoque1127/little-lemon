@@ -1,16 +1,81 @@
-import {View, Text, Image, StyleSheet, Pressable, KeyboardAvoidingView, Platform, ScrollView, TextInput} from 'react-native';
+import {View, Text, Image, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, TextInput} from 'react-native';
 import Header from '../components/Header';
 import Hero from '../components/Hero';
-import { fonts, sizes, textCase } from '../styles/typography';
+import { fonts, sizes } from '../styles/typography';
 import { clearUserData, getUserData, storeUserData } from '../utils/storage';
 import { useState } from 'react';
-import { YellowButton, GreenButton } from '../components/Button';
+import { GreenButton } from '../components/Button';
 import { notificationOptions, makeDefaultPrefs } from '../utils/notifications';
 import EmailNotifications from '../components/EmailNotifications';
+import Footer from '../components/Footer';
+import * as ImagePicker from 'expo-image-picker';
+import Avatar from '../components/Avatar'
+
 
 
 export default function Profile({ userData, setUserData }) {
 
+    //ImagePicker function
+    const [profilePic, setProfilePic] = useState('')
+    
+    const selectProfilePic = async () => {
+        // 1) Request permission
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            if (status !== 'granted') {
+                alert('Photo library access is required to select a profile picture.');
+                return;
+            }
+
+        // 2) Launch picker with correct options
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.7,
+        });
+
+        console.log('Picker result:', result);  
+        
+        // → { cancelled: false, uri: '...' }
+        if (result.canceled) {
+            console.log('User cancelled image pick');
+            return;
+        }
+        const uri = result.assets[0].uri;
+
+        const updatedUser = {
+            ...userData,          // preserve all existing fields
+            profilePic: uri,      // overwrite or add profilePic
+        };
+
+        try {
+            await storeUserData(updatedUser);    
+            const userUpdate = await getUserData();
+            console.log('User data stored:', userUpdate);
+            setUserData(userUpdate);
+        } catch (error) {
+                console.error('Failed to store user data:', error);
+                alert('Something went wrong saving your profile picture.');
+        }
+    };
+
+    const removeProfilePic = async () => {
+        const updatedUser = {
+            ...userData,          // preserve all existing fields
+            profilePic: '',      // overwrite or add profilePic
+        };
+
+        try {
+            await storeUserData(updatedUser);    
+            const userUpdate = await getUserData();
+            console.log('User data stored:', userUpdate);
+            setUserData(userUpdate);
+        } catch (error) {
+                console.error('Failed to store user data:', error);
+                alert('Something went wrong saving your profile picture.');
+        }
+    };
+    
     // Form validation states
     const [lastNameTouched, setLastNameTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
@@ -28,7 +93,7 @@ export default function Profile({ userData, setUserData }) {
         return phone.trim().length > 0 && phoneRegex.test(phone)};
 
     // Form state management
-   const [formData, setFormData] = useState({
+   const [formData, setFormData] = useState({        
         lastName: userData.lastName || '',
         phone:    userData.phone    || '',
         prefs:    userData.notificationPrefs || makeDefaultPrefs(),
@@ -62,6 +127,7 @@ export default function Profile({ userData, setUserData }) {
         try{
           console.log('Form submitted:', formData);
           const user = {
+            profilePic: userData.profilePic,
             firstName: userData.firstName,
             lastName: formData.lastName,
             email: userData.email,
@@ -135,20 +201,20 @@ export default function Profile({ userData, setUserData }) {
                         <View style={styles.form}>
                             <Text style={styles.label}>Avatar</Text>
 
-                            <View style={styles.profilePicContainer}>
                             
-                                <Image
-                                    style={styles.profilePic}
-                                    source={require('../assets/Profile.png')}
-                                    />
+
+                            <View style={styles.flexRowContainer}>
+                            
+                                <Avatar userData={userData} size={96}/>
+                               
                                 <GreenButton
                                     title = "Change"
-                                    onPress={() => console.log('Change Avatar pressed')}                                                                      
+                                    onPress={selectProfilePic}                                                                      
                                 />
                                 <GreenButton
                                     title = "Remove"
-                                    onPress={() => console.log('Remove Avatar pressed')}
-                                    disabled={true} // Disable for now, can be enabled later
+                                    onPress={removeProfilePic}
+                                    disabled={userData.profilePic ? false : true} 
                                     />
                                         
                             </View>
@@ -198,9 +264,9 @@ export default function Profile({ userData, setUserData }) {
 
                         </View>
 
-                        <View style={styles.footer}>
+                        <View style={styles.submit}>
                             
-                            <View style={styles.profilePicContainer}>
+                            <View style={styles.flexRowContainer}>
                                                          
                                 <GreenButton
                                     title = "Cancel changes"
@@ -213,18 +279,14 @@ export default function Profile({ userData, setUserData }) {
                                     disabled={disabledSubmit} 
                                     />
                                         
-                            </View>
-                            
-                            <YellowButton
-                                
-                                title="Logout"
-                                onPress={handleLogout}
-                                style={{alignSelf: 'stretch', width: '100%'}}
-                            />
-                        </View>                  
-                       
+                            </View>                          
+                        </View>                                         
                     </View>
-                </ScrollView>
+                    <Footer                                
+                        title="Log out"
+                        onPress={handleLogout}                        
+                    />
+                </ScrollView>                
             </KeyboardAvoidingView>
         </View>
     );
@@ -260,7 +322,7 @@ const styles = StyleSheet.create({
         marginBottom: 8,
     },
 
-    profilePicContainer: {
+    flexRowContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         marginBottom: 16,
@@ -269,13 +331,7 @@ const styles = StyleSheet.create({
 
         
     },
-
-    profilePic: {
-        width: 96,
-        height: 96,
-        borderRadius: 48,
-    },
-    
+     
     input: {
         height: 40,
         borderWidth: 1,
@@ -290,7 +346,7 @@ const styles = StyleSheet.create({
         borderColor: 'red',
         borderWidth: 1,
         },
-    footer: {
+    submit: {
         justifyContent: 'center',
         alignItems: 'center',
         flex: 1,

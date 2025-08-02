@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import { useState } from 'react';
 import { fonts, sizes, textCase } from '../styles/typography';
 import { storeUserData, getUserData } from '../utils/storage';
+import Footer from '../components/Footer'
 
 
 
@@ -15,9 +16,7 @@ export default function Onboarding({ userData, setUserData }) {
     firstName: '',    
     email: '',
   });
-
-  const [pressed, setPressed] = useState(false); // State to track button press
-
+  
   const [firstNameTouched, setFirstNameTouched] = useState(false);
   
   const [emailTouched, setEmailTouched] = useState(false);
@@ -40,6 +39,7 @@ export default function Onboarding({ userData, setUserData }) {
     try{
       console.log('Form submitted:', formData);
       const user = {
+        profilePic: '',
         firstName: formData.firstName,
         lastName: '', // lastName is not required in this step
         email: formData.email,
@@ -52,7 +52,7 @@ export default function Onboarding({ userData, setUserData }) {
       const userUpdate = await getUserData();
       console.log('User data stored:', userUpdate);
       setUserData(userUpdate); //updates state across screens
-      console.log('User data set in state:', userData);
+      
            
   } catch (error) {
     console.error('Failed to submit form:', error);
@@ -107,26 +107,11 @@ export default function Onboarding({ userData, setUserData }) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-      <View style={styles.footer}>
-        <Pressable
-            disabled={disabled}
-            onPressIn={() => setPressed(true)}
-            onPressOut={() => setPressed(false)}
-            style={({ pressed: isPressing }) => [
-                styles.button,
-                disabled
-                ? styles.disabled
-                : pressed
-                ? styles.clicked
-                : styles.untouched,
-            ]}
-            onPress={(formData.firstName && formData.email) ? handleSubmit : null}
-            >
-            <Text style={styles.buttonText}>
-                Next
-            </Text>
-        </Pressable>
-      </View>
+      <Footer                                
+        title="Submit"
+        onPress={handleSubmit} 
+        disabled={disabled}                       
+        />
     </View>
   );
 }
@@ -172,38 +157,6 @@ const styles = StyleSheet.create({
   borderColor: 'red',
   borderWidth: 1,
   },
-  footer: {
-    paddingHorizontal: 25,
-    paddingVertical: 24,
-    backgroundColor: '#495E57',
-    alignItems: 'center',
-  },
-  button: {
-    
-    height: 35,
-    borderRadius: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-    paddingVertical: 8,
-  },
-  untouched: {
-    backgroundColor: '#F4CE14', // bright yellow
-    opacity: 1,
-  },
-  clicked: {
-    backgroundColor: '#EE9972' //light orange,
-  },
-  disabled: {
-    backgroundColor: '#EDEFEE', // dark gray
-    
-  },
   
-  buttonText: {
-    fontSize: sizes.categories,
-    fontFamily: fonts.categories,
-    fontWeight: 'bold',
-    color: '#333333',
-  },
  
 });

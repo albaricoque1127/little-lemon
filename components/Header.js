@@ -1,7 +1,8 @@
 import { View, Image, StyleSheet, Platform, Pressable} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Avatar from './Avatar';
 
-export default function Header({ navigation, userData }) {
+export default function Header({  navigation, userData }) {
   console.log(`Header user state: ${userData.isLoggedIn}`);
   return (    
     <View style={styles.header}>
@@ -14,10 +15,7 @@ export default function Header({ navigation, userData }) {
       <View style={styles.spacer}>
         {userData.isLoggedIn && (
           <Pressable onPress={() => navigation.navigate('Profile')}>
-            <Image
-              source={require('../assets/Profile.png')}
-              style={styles.profilePic}
-            />
+            <Avatar userData={userData} size={48}/>
           </Pressable>
         )}
       </View>
@@ -44,11 +42,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 'auto',
   },
-  profilePic: {
-    width: 48,
-    height: 48,
-    borderRadius: 20,
-  },
+  
   spacer: {
     flex: 1,
     alignItems: 'flex-end',
