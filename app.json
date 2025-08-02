@@ -31,8 +31,8 @@
         {
           "photosPermission": "Pick a photo for your profile"
         }
-      ]
+      ],
+      "expo-sqlite"
     ]
-
   }
 }
