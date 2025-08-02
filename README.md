@@ -30,26 +30,27 @@ Optional: Run SQLite setup scripts in `App.js` or your data initialization modul
 
 - [x] Clean project scaffolding using Expo's blank JavaScript template  
 - [x] Onboarding screen with `TextInput` validation
-- [ ] `AsyncStodage` to store user details
-- [ ] Dynamic menu UI with `SectionList`  
-- [ ] Safe SQL parameter binding and search/filter logic  
-- [ ] Grid-aligned, accessible components styled via custom design tokens  
-- [ ] Offline capabilities with local caching  
+- [x] `AsyncStorage` to store user details
+- [x] Dynamic menu UI with `SectionList`
+- [x] User-selectable profile image with custom default
+- [x] Stack navigation
+- [x] `Expo SQLite` for local storage  
+- [ ] Search/filter logic  
 
 ## 🛠 Folder Structure
 
 ```
 📁 assets/        # Fonts and images  
 📁 components/    # Reusable UI widgets  
-📁 db/            # SQLite logic and schema setup  
 📁 screens/       # Feature views like Menu, Details  
-📁 theme/         # Colors, spacing, typography system  
-App.js          # Entry point  
+📁 styles/        # Typography settings
+📁 utils/         # AsyncStorage and SQLite logic and schema setup, other functions 
+App.js             # Entry point  
 ```
 
 ## 🤝 Contributing
 
-This project is part of a UX/UI capstone initiative. Contributions and feedback welcome—especially around design consistency and performance optimization.
+This is a Capstone Project for the Meta React Native Specialization on Coursera. Contributions and feedback welcome/.
 
 ---
 
