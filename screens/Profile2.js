@@ -76,7 +76,9 @@ export default function Profile({ userData, setUserData }) {
     };
     
     // Form validation states    
+    const [firstNameTouched, setFirstNameTouched] = useState(false);
     const [lastNameTouched, setLastNameTouched] = useState(false);
+    const [emailTouched, setEmailTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
 
     // Regular expressions for form validation
@@ -84,19 +86,27 @@ export default function Profile({ userData, setUserData }) {
     const phoneRegex = /^(?:\+1\s?)?(?:\(?([2-9][0-9]{2})\)?[\s.-]?)([2-9][0-9]{2})[\s.-]?([0-9]{4})$/;
 
     // Form validation functions
-    const isValidLastName = (lastName) => {
-        return lastName.trim().length > 0 && nameRegex.test(lastName);
-    };
+    const isValidFirstName = (firstName) =>
+        firstName.trim().length > 0 && nameRegex.test(firstName);
 
-    const isValidPhone = (phone) => {
-        return phone.trim().length > 0 && phoneRegex.test(phone)};
+    const isValidLastName = (lastName) => 
+        lastName.trim().length > 0 && nameRegex.test(lastName);
+    
+
+    const isValidEmail = (email) =>
+        email.trim().length > 0 && emailRegex.test(email);
+
+    const isValidPhone = (phone) => 
+        phone.trim().length > 0 && phoneRegex.test(phone);
 
     // Form state management
-   const [formData, setFormData] = useState({        
+   const [formData, setFormData] = useState({
+        firstName: userData.firstName || '',
         lastName: userData.lastName || '',
-        phone:    userData.phone    || '',
-        prefs:    userData.notificationPrefs || makeDefaultPrefs(),
-        });
+        email: userData.email || '',
+        phone: userData.phone || '',
+        prefs: userData.notificationPrefs || makeDefaultPrefs(),
+});
     
     // Toggle function for email notification preferences
     const togglePref = id => {
@@ -115,56 +125,54 @@ export default function Profile({ userData, setUserData }) {
     );
 
     // disabledSubmit logic for Submit and Cancel buttons
+    const allFieldsValid =
+        isValidFirstName(formData.firstName) &&
+        isValidLastName(formData.lastName) &&
+        isValidEmail(formData.email) &&
+        isValidPhone(formData.phone);
+
+    // Determine if we can submit    
     const disabledSubmit = isOnboarding
         // onboarding: require valid name & phone
-        ? !isValidLastName(formData.lastName) || !isValidPhone(formData.phone)
+        ? !allFieldsValid
          // profile edit: require at least one pref change
         : !prefsChanged;
                   
 
     const handleSubmit = async () => {
-        try{
-          console.log('Form submitted:', formData);
-          const user = {
+        try {
+            const user = {
             profilePic: userData.profilePic,
-            firstName: userData.firstName,
+            firstName: formData.firstName,
             lastName: formData.lastName,
-            email: userData.email,
+            email: formData.email,
             phone: formData.phone,
             notificationPrefs: formData.prefs,
-            isLoggedIn: true
-          };
-    
-          await storeUserData(user);
-          const userUpdate = await getUserData();
-          console.log('User data stored:', userUpdate);
-          setUserData(userUpdate); //updates state across screens
-               
+            isLoggedIn: true,
+            };
+
+            await storeUserData(user);
+            const userUpdate = await getUserData();
+            setUserData(userUpdate);
         } catch (error) {
             console.error('Failed to submit form:', error);
         }
-        };
+    };
     
     const handleCancel = () => {
-        if (isOnboarding) {
-            // Reset everything back to blank + default prefs
-            setFormData({
-                lastName: '',
-                phone:    '',
-                prefs:    makeDefaultPrefs(),
-            });
-        } else {
-        // Only reset prefs to whatever’s stored in userData
-        setFormData(prev => ({
-            ...prev,
+        setFormData({
+            firstName: userData.firstName || '',
+            lastName: userData.lastName || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
             prefs: userData.notificationPrefs || makeDefaultPrefs(),
-        }));
-        }
+        });
 
-    // Clear any touched/validation flags
-    setLastNameTouched(false);
-    setPhoneTouched(false);
-  };
+        setFirstNameTouched(false);
+        setLastNameTouched(false);
+        setEmailTouched(false);
+        setPhoneTouched(false);
+    };
         
     // Logout function
     const handleLogout = async () => {
@@ -177,7 +185,7 @@ export default function Profile({ userData, setUserData }) {
         }
     };
 
-    
+       
 
     return (
                
@@ -218,8 +226,19 @@ export default function Profile({ userData, setUserData }) {
                                         
                             </View>
 
-                            <Text style={styles.label}>First Name</Text>
-                            <Text style={styles.input}>{userData.firstName}</Text>                            
+                            <Text style={styles.label}>First Name*</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    firstNameTouched && !isValidFirstName(formData.firstName) && styles.inputError,
+                                ]}
+                                value={formData.firstName}
+                                onChangeText={(text) => setFormData({ ...formData, firstName: text })}
+                                onBlur={() => setFirstNameTouched(true)}
+                                placeholder="Enter your first name"
+                                clearButtonMode="always"
+                                />
+
                             <Text style={styles.label}>Last Name*</Text>
                             {userData.lastName ? (
                                 <Text style={styles.input}>{userData.lastName}</Text>
@@ -236,8 +255,20 @@ export default function Profile({ userData, setUserData }) {
                                     clearButtonMode="always"
                                     />
                             )}                                                  
-                            <Text style={styles.label}>Email</Text>
-                            <Text style={styles.input}>{userData.email}</Text>
+                            <Text style={styles.label}>Email*</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    emailTouched && !isValidEmail(formData.email) && styles.inputError,
+                                ]}
+                                value={formData.email}
+                                onChangeText={(text) => setFormData({ ...formData, email: text })}
+                                onBlur={() => setEmailTouched(true)}
+                                placeholder="Enter your email"
+                                keyboardType="email-address"
+                                clearButtonMode="always"
+                            />
+
                             <Text style={styles.label}>Phone*</Text>
                             {userData.phone ? (
                                 <Text style={styles.input}>{userData.phone}</Text>

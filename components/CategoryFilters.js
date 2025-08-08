@@ -19,7 +19,7 @@ export default function CategoryFilter({ selectedCategories, onChange, categorie
             return (
               <Pressable
                 key={cat}
-                onPress={() => onChange(cat)}
+                onPress={() => onChange(cat)} 
                 style={[
                   styles.button,
                   isSelected ? styles.selected : styles.unselected,

@@ -10,19 +10,17 @@ export default function Header({  navigation, userData, canGoBack }) {
   console.log(`Header user state: ${userData.isLoggedIn}`);
 
   return (    
-    <View style={styles.header}>
-
-      
-      <Pressable
-        onPress={() => navigation.goBack()}
-        disabled={!canGoBack}
-        style={({ pressed }) => [
-          styles.iconButton,
-          pressed && styles.iconButtonPressed,
-          !canGoBack && styles.iconButtonDispabled,
-        ]}
-      >
-        <Ionicons name="arrow-back" style={styles.buttonIcon} size={25}/>
+    <View style={styles.header}>      
+      <Pressable 
+        onPress={() => navigation.goBack()} 
+        disabled={!canGoBack} 
+        style={
+          ({ pressed }) => [ 
+            styles.iconButton, 
+            pressed && styles.iconButtonPressed, 
+            !canGoBack && styles.iconButtonDispabled, 
+            ]} > 
+        <Ionicons name="arrow-back" style={styles.buttonIcon} size={25}/> 
       </Pressable>
           
       <Image

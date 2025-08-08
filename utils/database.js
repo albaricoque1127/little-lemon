@@ -93,7 +93,7 @@ export async function saveMenuItems(menuItems) {
         console.log('Menu items saved successfully:', rows);
             return true;
         } catch (error) {
-            console.error('❌ Failed to save menu items:', error);
+            console.error('Failed to save menu items:', error);
             throw error;
         }
 }
@@ -123,35 +123,36 @@ export async function getCategories() {
         }
     };
 
-export async function filterByQueryAndCategories(query, activeCategories) {
+// Filter function to get menu items based on search query and selected categories
+export async function filterByQueryAndCategories(searchQuery, selectedCategories) {
   try {
     if (!db) {
       throw new Error('Database not initialized');
     }
 
     // Log the input parameters
-    console.log('Filtering with:', { query, activeCategories });
+    console.log('Filtering with:', { searchQuery, selectedCategories });
 
     let sql;
     let params = [];
 
-    // Case 1: Both query and categories
-    if (query && activeCategories.length > 0) {
-      const categories = activeCategories.map(cat => `'${cat}'`).join(', ');
-      sql = `SELECT * FROM menuitems WHERE LOWER(title) LIKE ? AND category IN (${categories})`;
-      params = [`%${query.toLowerCase()}%`];
+    // Case 1: User entered both search query and selected categories
+    if (searchQuery && selectedCategories.length > 0) {
+      const categories = selectedCategories.map(cat => `'${cat}'`).join(', ');
+      sql = `SELECT * FROM menuitems WHERE LOWER(name) LIKE ? AND category IN (${categories})`;
+      params = [`%${searchQuery.toLowerCase()}%`];
     }
-    // Case 2: Only query
-    else if (query) {
-      sql = 'SELECT * FROM menuitems WHERE LOWER(title) LIKE ?';
-      params = [`%${query.toLowerCase()}%`];
+    // Case 2: User entered only search query
+    else if (searchQuery) {
+      sql = 'SELECT * FROM menuitems WHERE LOWER(name) LIKE ?';
+      params = [`%${searchQuery.toLowerCase()}%`];
     }
-    // Case 3: Only categories
-    else if (activeCategories.length > 0) {
-      const categories = activeCategories.map(cat => `'${cat}'`).join(', ');
+    // Case 3: User only selected categories
+    else if (selectedCategories.length > 0) {
+      const categories = selectedCategories.map(cat => `'${cat}'`).join(', ');
       sql = `SELECT * FROM menuitems WHERE category IN (${categories})`;
     }
-    // Case 4: No filters
+    // Case 4: No filters applied
     else {
       sql = 'SELECT * FROM menuitems';
     }
@@ -171,3 +172,4 @@ export async function filterByQueryAndCategories(query, activeCategories) {
     throw error;
   }
 }
+

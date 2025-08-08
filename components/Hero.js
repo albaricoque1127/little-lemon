@@ -1,29 +1,30 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { fonts, sizes } from '../styles/typography';
 
 export default function Hero() {
-    
-    return (
-        <View style={styles.heroContainer}>
-            <Text style={styles.title}>Little Lemon</Text>
-            <View style={styles.contentContainer}>
-                <View style={styles.textContainer}>
-                    <Text style={styles.subtitle}>Chicago</Text>
-                    <Text style={styles.description}>
-                        We are a family owned Mediterranean restaurant, 
-                        focused on traditional recipes served with a modern twist.
-                    </Text>
-                </View>
-                <View style={styles.imageContainer}>
-                    <Image 
-                        source={require('../assets/Hero image.png')}
-                        style={styles.heroImage}
-                        resizeMode="cover"
-                    />
-                </View>
-            </View>
+  return (
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.heroContainer}>
+        <Text style={styles.title}>Little Lemon</Text>
+        <View style={styles.contentContainer}>
+          <View style={styles.textContainer}>
+            <Text style={styles.subtitle}>Chicago</Text>
+            <Text style={styles.description}>
+              We are a family owned Mediterranean restaurant, 
+              focused on traditional recipes served with a modern twist.
+            </Text>
+          </View>
+          <View style={styles.imageContainer}>
+            <Image 
+              source={require('../assets/Hero image.png')}
+              style={styles.heroImage}
+              resizeMode="cover"
+            />
+          </View>
         </View>
-    );
+      </View>
+    </TouchableWithoutFeedback>
+  );
 }
 
 const styles = StyleSheet.create({

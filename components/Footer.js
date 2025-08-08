@@ -5,11 +5,13 @@ import { YellowButton } from '../components/Button';
 export default function Footer({ title, onPress, disabled=false }) {
     return (
         <View style={styles.footer}>
-        <YellowButton
+        {title && (
+            <YellowButton
             title={title}
             onPress={onPress}
             disabled={disabled}
         />
+        )}
         </View>
     )
 };
