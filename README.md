@@ -32,14 +32,14 @@ git clone [repository-url]
 cd little-lemon
 ```
 
-2. Install base dependencies:
+2. Install dependencies:
 ```bash
 npm install
 ```
 
-3. Install required packages:
+3. Install specific Expo packages:
 ```bash
-npx expo install @react-navigation/native @react-navigation/native-stack react-native-safe-area-context expo-font expo-image-picker expo-sqlite @react-native-async-storage/async-storage 
+npx expo install @expo/vector-icons @react-navigation/native @react-navigation/native-stack react-native-safe-area-context expo-font expo-image-picker expo-sqlite @react-native-async-storage/async-storage
 ```
 
 4. Start the development server:
@@ -62,8 +62,8 @@ App.js             # Entry point
 
 ## Dependencies
 
-- Navigation: @react-navigation/native, @react-navigation/native-stack, react-native-screens
-- Expo core: expo, expo-status-bar, expo-splash-screen
+- Navigation: @react-navigation/native, @react-navigation/native-stack
+- Expo core: expo, vector-icons
 - Data storage: @react-native-async-storage/async-storage, expo-sqlite
 - UI/Features: expo-font, expo-image-picker
 - React core: react, react-native, react-native-safe-area-context
