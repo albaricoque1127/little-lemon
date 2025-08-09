@@ -1,5 +1,4 @@
 import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import Header from '../components/Header';
 import Hero from '../components/Hero';
 import { useState } from 'react';
 import { fonts, sizes, textCase } from '../styles/typography';

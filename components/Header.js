@@ -1,7 +1,6 @@
 import { View, Image, StyleSheet, Pressable} from 'react-native';
 import Avatar from './Avatar';
 import { Ionicons } from '@expo/vector-icons';
-import React from 'react';
 
 
 

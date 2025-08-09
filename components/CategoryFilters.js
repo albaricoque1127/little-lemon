@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {  ScrollView,  Pressable,  Text,  StyleSheet,  ActivityIndicator,  View,
 } from 'react-native';
 import { fonts, sizes } from '../styles/typography';

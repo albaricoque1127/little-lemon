@@ -2,8 +2,6 @@ import { View, Text, FlatList, StyleSheet, TextInput, Image, ActivityIndicator }
 import Hero from '../components/Hero';
 import { useState, useRef } from 'react';
 import { fonts, sizes, characterSpacing, lineHeights } from '../styles/typography';
-import { storeUserData, getUserData } from '../utils/storage';
-import Footer from '../components/Footer'
 import { useEffect } from 'react';
 import { initDatabase, createTable, getMenuItems, saveMenuItems, dropMenuItemsTable, getCategories, filterByQueryAndCategories} from '../utils/database'
 import CategoryFilter from '../components/CategoryFilters';
@@ -187,9 +185,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     
   },
-  scrollView: {
-    flex: 1,
-  },
+  
   contentContainer: {
     flex: 1,
     paddingHorizontal: 25,

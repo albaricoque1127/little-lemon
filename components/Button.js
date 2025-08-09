@@ -1,4 +1,4 @@
-import {View, Text, Pressable, StyleSheet} from 'react-native';
+import {Text, Pressable, StyleSheet} from 'react-native';
 import {fonts, sizes} from '../styles/typography';
 
 export function YellowButton({title, onPress, disabled=false}) {

@@ -1,59 +1,123 @@
 # Little Lemon Mobile App
-
-A React Native app built with Expo to showcase a dynamic restaurant menu using SQLite and advanced UI techniques. This project combines clean architecture, polished design, and offline-first data handling for a smooth mobile experience.
+A React Native mobile application for Little Lemon, a family-owned Mediterranean restaurant. The app allows users to browse the menu, place orders, and manage their profile.
 
 ## 🚀 Tech Stack
 
 - React Native + Expo SDK  
 - JavaScript
 - SQLite (Expo SQLite)  
-- Metro Bundler  
 - Figma for UI planning  
 
-## 📦 Setup Instructions
+## 🎨 Features
 
+- User authentication and profile management
+- Menu browsing with search and category filters
+- Profile picture upload functionality
+- Email notification preferences
+- Responsive design for iOS and Android
+- Offline data persistence using SQLite
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- npm or yarn
+- Expo CLI (`npm install -g expo-cli`)
+- iOS Simulator (for Mac users) or Android Studio (for Android development)
+
+## 📦 Installation
+
+1. Clone the repository:
 ```bash
-# Clone the repo and install dependencies
-git clone https://github.com/your-username/little-lemon
+git clone [repository-url]
 cd little-lemon
-npm install
+```
 
-# Start the local development server
+2. Install base dependencies:
+```bash
+npm install
+```
+
+3. Install required packages:
+```bash
+npx expo install @react-navigation/native @react-navigation/native-stack react-native-safe-area-context expo-font expo-image-picker expo-sqlite @react-native-async-storage/async-storage 
+```
+
+4. Start the development server:
+```bash
 npx expo start
 ```
 
-Use the QR code with Expo Go on your device, or press `a` or `i` for Android/iOS simulator.
+5. Use the QR code with Expo Go on your device, or press `a` or `i` for Android/iOS simulator.
 
-Optional: Run SQLite setup scripts in `App.js` or your data initialization module to seed demo menu items and categories.
-
-## 🎨 Features (in progress)
-
-- [x] Clean project scaffolding using Expo's blank JavaScript template  
-- [x] Onboarding screen with `TextInput` validation
-- [x] `AsyncStorage` to store user details
-- [x] Dynamic menu UI with `SectionList`
-- [x] User-selectable profile image with custom default
-- [x] Stack navigation
-- [x] `Expo SQLite` for local storage  
-- [ ] Search/filter logic  
-
-## 🛠 Folder Structure
+## 🛠 Project Structure
 
 ```
 📁 assets/        # Fonts and images  
-📁 components/    # Reusable UI widgets  
-📁 screens/       # Feature views like Menu, Details  
-📁 styles/        # Typography settings
-📁 utils/         # AsyncStorage and SQLite logic and schema setup, other functions 
+📁 components/    # Avatar.js, Button.js, Categoryfilter.js, EmailNotifications.js, Footer.js, Header.js, Hero.js, RootNavigator.js
+📁 screens/       # Menu.js, Onboarding.js, Profile.js
+📁 styles/        # typography.js
+📁 utils/         # database.js, storage.js, notificaitons.js
 App.js             # Entry point  
 ```
 
+## Dependencies
+
+- Navigation: @react-navigation/native, @react-navigation/native-stack, react-native-screens
+- Expo core: expo, expo-status-bar, expo-splash-screen
+- Data storage: @react-native-async-storage/async-storage, expo-sqlite
+- UI/Features: expo-font, expo-image-picker
+- React core: react, react-native, react-native-safe-area-context
+
+## Typography
+
+The app uses two main typefaces:
+- Markazi Text (Medium, Regular) for display titles
+- Karla (Regular, Medium, Bold, ExtraBold) for body text and UI elements
+
+## Color Palette
+
+- Primary Green: #495E57
+- Primary Yellow: #F4CE14
+- Secondary Orange: #EE9972
+- Background: #FFFFFF
+- Text: #333333
+
+## Development
+
+### Running on iOS
+```bash
+npx expo run:ios
+```
+
+### Running on Android
+```bash
+npx expo run:android
+```
+
+## Testing
+
+Currently, the project does not include automated tests. This would be a good area for future improvement.
+
+## Future Enhancements
+
+- Implement order processing
+- Add payment integration
+- Include unit tests
+- Add tablet layout support
+- Implement push notifications
+
 ## 🤝 Contributing
 
-This is a Capstone Project for the Meta React Native Specialization on Coursera. Contributions and feedback welcome/.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details
 
 ---
 
-🔗 Created with ❤️ using Expo CLI  
-🗂 Repo structured for scalability and clean Git hygiene  
-📱 Designed for both Android and iOS experience parity
+🔗 Created with ❤️ using Expo CLI
