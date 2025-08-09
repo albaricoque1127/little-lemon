@@ -5,6 +5,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
 import { getUserData } from './utils/storage';
 import RootNavigator from './components/RootNavigator';
+import { Ionicons } from '@expo/vector-icons';
+import { ActivityIndicator } from 'react-native';
 
 
 export default function App() {
@@ -12,6 +14,7 @@ export default function App() {
   const [userData, setUserData] = useState(null);
 
   const [fontsLoaded] = useFonts({
+    ...Ionicons.font, // Ionicons for vector icons
     'MarkaziText-Medium': require('./assets/fonts/MarkaziText-Medium.ttf'),
     'MarkaziText-Regular': require('./assets/fonts/MarkaziText-Regular.ttf'),
     'Karla-Medium': require('./assets/fonts/Karla-Medium.ttf'),
@@ -24,17 +27,19 @@ export default function App() {
     const loadUser = async () => {
       const data = await getUserData();
       console.log('User data loaded:', data);
-      if (data) {
-        setUserData(data);
-      } else {
-        console.log('No user data found or user is not logged in');
-        setUserData({
-          isLoggedIn: false
-        });
-      }
+      setUserData(data || { isLoggedIn: false });
     };
     loadUser();
   }, []);
+
+  // Wait for fonts before rendering
+  if (!fontsLoaded || userData === null) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#333" />
+      </View>
+    );
+  }
 
   return (
     <SafeAreaProvider>
@@ -51,4 +56,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
+

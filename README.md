@@ -39,7 +39,7 @@ npm install
 
 3. Install specific Expo packages:
 ```bash
-npx expo install @expo/vector-icons @react-navigation/native @react-navigation/native-stack react-native-safe-area-context expo-font expo-image-picker expo-sqlite @react-native-async-storage/async-storage
+npx expo install @expo/vector-icons@^14.1.0 @react-navigation/native @react-navigation/native-stack react-native-safe-area-context expo-font expo-image-picker expo-sqlite @react-native-async-storage/async-storage
 ```
 
 4. Start the development server:
