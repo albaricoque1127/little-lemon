@@ -1,5 +1,5 @@
 # Little Lemon Mobile App
-A React Native mobile application for Little Lemon, a family-owned Mediterranean restaurant. The app allows users to browse the menu, place orders, and manage their profile.
+A React Native mobile application for Little Lemon, a family-owned Mediterranean restaurant. The app allows users to log in, browse the menu, and manage their profile.
 
 ## 🚀 Tech Stack
 
