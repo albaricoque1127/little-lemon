@@ -129,8 +129,7 @@ export default function Menu({ userData, setUserData }) {
   
   return (
     <View style={styles.container}>
-      <Hero />
-
+      
       {isLoading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#495E57" />
@@ -138,35 +137,41 @@ export default function Menu({ userData, setUserData }) {
         </View>
       ) : (
         <>
-          <View style={styles.searchContainer}>
-            <Ionicons name="search" style={styles.searchIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder="Search for a dish"
-              value={searchQuery}
-              onChangeText={text => setSearchQuery(text)}
-              clearButtonMode="always"
-              keyboardType="default"
-            />
-          </View>
-
-          <View style={styles.contentContainer}>
-            <Text style={styles.sectionTitle}>ORDER FOR DELIVERY!</Text>
-
-            <CategoryFilter
-              selectedCategories={selectedCategories}
-              onChange={toggleCategory}
-              categories={categories}
-            />
-
             <FlatList
               data={menuItemsToDisplay}
               keyExtractor={(item) => item.name}
               renderItem={renderMenuItem}
               ItemSeparatorComponent={separator}
-              ListFooterComponent={<View style={{ height: 32 }} />}
-            />
-          </View>
+              style={styles.contentContainer}
+              ListHeaderComponent={
+                <>
+                    <Hero />
+                    <View style={styles.searchContainer}>
+                        <Ionicons name="search" style={styles.searchIcon} />
+                            <TextInput
+                                style={styles.input}
+                                placeholder="Search for a dish"
+                                value={searchQuery}
+                                onChangeText={text => setSearchQuery(text)}
+                                clearButtonMode="always"
+                                keyboardType="default" />
+                    </View>
+                    <View style={{paddingHorizontal: 25}}>
+                        <Text style={styles.sectionTitle}>ORDER FOR DELIVERY!</Text>
+
+                        <CategoryFilter
+                        selectedCategories={selectedCategories}
+                        onChange={toggleCategory}
+                        categories={categories}
+                        />
+                        <View style={styles.separator} />
+                    </View>
+                </>
+            }
+            ListHeaderComponentStyle={{marginHorizontal: -25, marginTop: -16}}    
+            ListFooterComponent={separator}
+            ListFooterComponentStyle={{marginHorizontal: -25, marginBottom: 32}}
+            />          
         </>
       )}
       
@@ -193,6 +198,7 @@ const styles = StyleSheet.create({
   searchContainer:{
     backgroundColor: '#495E57',
     paddingHorizontal: 25,
+    marginBottom: 16,
   },
 
   searchIcon: {

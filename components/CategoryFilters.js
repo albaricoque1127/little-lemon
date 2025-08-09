@@ -43,7 +43,7 @@ export default function CategoryFilter({ selectedCategories, onChange, categorie
 
 const styles = StyleSheet.create({
   container: {
-    
+    paddingBottom: 16,
     justifyContent: 'space-between'
   },
   button: {

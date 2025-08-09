@@ -76,27 +76,39 @@ export default function Profile({ userData, setUserData }) {
     };
     
     // Form validation states    
+    const [firstNameTouched, setFirstNameTouched] = useState(false);
     const [lastNameTouched, setLastNameTouched] = useState(false);
+    const [emailTouched, setEmailTouched] = useState(false);
     const [phoneTouched, setPhoneTouched] = useState(false);
 
     // Regular expressions for form validation
     const nameRegex = /^[a-zA-ZÀ-ÿ\u00C0-\u017F\s'-]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+    // Phone regex for US numbers (can be adjusted for other formats)
     const phoneRegex = /^(?:\+1\s?)?(?:\(?([2-9][0-9]{2})\)?[\s.-]?)([2-9][0-9]{2})[\s.-]?([0-9]{4})$/;
 
     // Form validation functions
-    const isValidLastName = (lastName) => {
-        return lastName.trim().length > 0 && nameRegex.test(lastName);
-    };
+    const isValidFirstName = (firstName) =>
+        firstName.trim().length > 0 && nameRegex.test(firstName);
 
-    const isValidPhone = (phone) => {
-        return phone.trim().length > 0 && phoneRegex.test(phone)};
+    const isValidLastName = (lastName) => 
+        lastName.trim().length > 0 && nameRegex.test(lastName);    
+
+    const isValidEmail = (email) =>
+        email.trim().length > 0 && emailRegex.test(email);
+
+    const isValidPhone = (phone) => 
+        phone.trim().length > 0 && phoneRegex.test(phone);
+    
 
     // Form state management
-   const [formData, setFormData] = useState({        
-        lastName: userData.lastName || '',
-        phone:    userData.phone    || '',
-        prefs:    userData.notificationPrefs || makeDefaultPrefs(),
-        });
+   const [formData, setFormData] = useState({
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        email: userData.email,
+        phone: userData.phone,
+        prefs: userData.notificationPrefs || makeDefaultPrefs(),
+    });
     
     // Toggle function for email notification preferences
     const togglePref = id => {
@@ -109,62 +121,71 @@ export default function Profile({ userData, setUserData }) {
     // Detect if we're in “onboarding” mode (no name & phone yet)
     const isOnboarding = !userData.lastName && !userData.phone;
 
-    // Check if any pref actually changed
+    // Check if any pref actually changed, will initially validate to true
     const prefsChanged = Object.keys(formData.prefs).some(
         key => formData.prefs[key] !== (userData.notificationPrefs || {})[key]
     );
 
     // disabledSubmit logic for Submit and Cancel buttons
-    const disabledSubmit = isOnboarding
-        // onboarding: require valid name & phone
-        ? !isValidLastName(formData.lastName) || !isValidPhone(formData.phone)
-         // profile edit: require at least one pref change
-        : !prefsChanged;
-                  
+
+    // Helper function to check if all fields are valid
+    const allFieldsValid =
+        isValidFirstName(formData.firstName) &&
+        isValidLastName(formData.lastName) &&
+        isValidEmail(formData.email) &&
+        isValidPhone(formData.phone);
+    
+    // Determine if user has made any changes
+    const hasChanged =
+        formData.firstName !== userData.firstName ||
+        formData.lastName !== userData.lastName ||
+        formData.email !== userData.email ||
+        formData.phone !== userData.phone ||
+        (!isOnboarding && prefsChanged);
+        
+
+    const disabledSubmit = !allFieldsValid || !hasChanged;
+    
+    const disabledCancel = !hasChanged;
+
+    console.log(`allFieldsValid: ${allFieldsValid}, hasChanged: ${hasChanged} prefsChanged: ${prefsChanged}`);
+    console.log(`Disabled Submit: ${disabledSubmit}, Disabled Cancel: ${disabledCancel}`);
+    
 
     const handleSubmit = async () => {
-        try{
-          console.log('Form submitted:', formData);
-          const user = {
+        try {
+            const user = {
             profilePic: userData.profilePic,
-            firstName: userData.firstName,
+            firstName: formData.firstName,
             lastName: formData.lastName,
-            email: userData.email,
+            email: formData.email,
             phone: formData.phone,
             notificationPrefs: formData.prefs,
-            isLoggedIn: true
-          };
-    
-          await storeUserData(user);
-          const userUpdate = await getUserData();
-          console.log('User data stored:', userUpdate);
-          setUserData(userUpdate); //updates state across screens
-               
+            isLoggedIn: true,
+            };
+
+            await storeUserData(user);
+            const userUpdate = await getUserData();
+            setUserData(userUpdate);
         } catch (error) {
             console.error('Failed to submit form:', error);
         }
-        };
+    };
     
     const handleCancel = () => {
-        if (isOnboarding) {
-            // Reset everything back to blank + default prefs
-            setFormData({
-                lastName: '',
-                phone:    '',
-                prefs:    makeDefaultPrefs(),
-            });
-        } else {
-        // Only reset prefs to whatever’s stored in userData
-        setFormData(prev => ({
-            ...prev,
+        setFormData({
+            firstName: userData.firstName || '',
+            lastName: userData.lastName || '',
+            email: userData.email || '',
+            phone: userData.phone || '',
             prefs: userData.notificationPrefs || makeDefaultPrefs(),
-        }));
-        }
+        });
 
-    // Clear any touched/validation flags
-    setLastNameTouched(false);
-    setPhoneTouched(false);
-  };
+        setFirstNameTouched(false);
+        setLastNameTouched(false);
+        setEmailTouched(false);
+        setPhoneTouched(false);
+    };
         
     // Logout function
     const handleLogout = async () => {
@@ -177,7 +198,7 @@ export default function Profile({ userData, setUserData }) {
         }
     };
 
-    
+       
 
     return (
                
@@ -218,42 +239,60 @@ export default function Profile({ userData, setUserData }) {
                                         
                             </View>
 
-                            <Text style={styles.label}>First Name</Text>
-                            <Text style={styles.input}>{userData.firstName}</Text>                            
+                            <Text style={styles.label}>First Name*</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    firstNameTouched && !isValidFirstName(formData.firstName) && styles.inputError,
+                                ]}
+                                value={formData.firstName}
+                                onChangeText={(text) => setFormData({...formData, firstName: text})}
+                                onBlur={() => setFirstNameTouched(true)}
+                                placeholder="Enter your first name"
+                                clearButtonMode="always"
+                            />
+
                             <Text style={styles.label}>Last Name*</Text>
-                            {userData.lastName ? (
-                                <Text style={styles.input}>{userData.lastName}</Text>
-                            ) : (
-                                <TextInput
-                                    style={[
-                                        styles.input,
-                                        lastNameTouched && !isValidLastName(formData.lastName) && styles.inputError
-                                    ]}
-                                    value={formData.lastName}
-                                    onChangeText={(text) => setFormData({...formData, lastName: text})}
-                                    onBlur={() => setLastNameTouched(true)}
-                                    placeholder="Enter your last name"
-                                    clearButtonMode="always"
-                                    />
-                            )}                                                  
-                            <Text style={styles.label}>Email</Text>
-                            <Text style={styles.input}>{userData.email}</Text>
-                            <Text style={styles.label}>Phone*</Text>
-                            {userData.phone ? (
-                                <Text style={styles.input}>{userData.phone}</Text>
-                            ):(
-                                <TextInput
-                                    style={[
-                                        styles.input,
-                                        phoneTouched && !isValidPhone(formData.phone) && styles.inputError
-                                    ]}
-                                    value={formData.phone}
-                                    onChangeText={(text) => setFormData({...formData, phone:text})}
-                                    onBlur={() => setPhoneTouched(true)}
-                                    placeholder="Enter your phone number"
-                                    clearButtonMode="always"
-                                    />
-                            )}
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    lastNameTouched && !isValidLastName(formData.lastName) && styles.inputError
+                                ]}
+                                value={formData.lastName}
+                                onChangeText={(text) => setFormData({...formData, lastName: text})}
+                                onBlur={() => setLastNameTouched(true)}
+                                placeholder="Enter your last name"
+                                clearButtonMode="always"
+                            />
+                                                 
+                            <Text style={styles.label}>Email*</Text>
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    emailTouched && !isValidEmail(formData.email) && styles.inputError,
+                                ]}
+                                value={formData.email}
+                                onChangeText={(text) => setFormData({ ...formData, email: text })}
+                                onBlur={() => setEmailTouched(true)}
+                                placeholder="Enter your email"
+                                keyboardType="email-address"
+                                clearButtonMode="always"
+                            />
+
+                            <Text style={styles.label}>Phone*</Text>                                                           
+                            <TextInput
+                                style={[
+                                    styles.input,
+                                    phoneTouched && !isValidPhone(formData.phone) && styles.inputError
+                                ]}
+                                value={formData.phone}
+                                onChangeText={(text) => setFormData({...formData, phone:text})}
+                                onBlur={() => setPhoneTouched(true)}
+                                placeholder="Enter your phone number"
+                                clearButtonMode="always"
+                                keyboardType="phone-pad"
+                                />
+                            
 
                             <EmailNotifications
                                 options={notificationOptions}
@@ -270,12 +309,12 @@ export default function Profile({ userData, setUserData }) {
                                 <GreenButton
                                     title = "Cancel changes"
                                     onPress={handleCancel}
-                                    disabled={disabledSubmit}                                                                      
+                                    disabled={disabledCancel ? true : false}                                                                      
                                 />
                                 <GreenButton
                                     title = "Save changes"
                                     onPress={handleSubmit}
-                                    disabled={disabledSubmit} 
+                                    disabled={disabledSubmit ? true : false} 
                                     />
                                         
                             </View>                          
