@@ -6,7 +6,7 @@ A React Native mobile application for Little Lemon, a family-owned Mediterranean
 - React Native + Expo SDK  
 - JavaScript
 - SQLite (Expo SQLite)  
-- Figma for UI planning  
+- Figma for UI planning (see the assets folder for the wireframe)
 
 ## 🎨 Features
 
@@ -52,7 +52,7 @@ npx expo start
 ## 🛠 Project Structure
 
 ```
-📁 assets/        # Fonts and images  
+📁 assets/        # Fonts and images, Figma wireframes  
 📁 components/    # Avatar.js, Button.js, Categoryfilter.js, EmailNotifications.js, Footer.js, Header.js, Hero.js, RootNavigator.js
 📁 screens/       # Menu.js, Onboarding.js, Profile.js
 📁 styles/        # typography.js
