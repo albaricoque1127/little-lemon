@@ -289,7 +289,7 @@ export default function Profile({ userData, setUserData }) {
                                 onBlur={() => setPhoneTouched(true)}
                                 placeholder="Enter your phone number"
                                 clearButtonMode="always"
-                                keyboardType="phone-pad"
+                                keyboardType="default"
                                 />
                             
 
