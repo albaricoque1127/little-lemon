@@ -1,12 +1,12 @@
 # Little Lemon Mobile App
-A React Native mobile application for Little Lemon, a family-owned Mediterranean restaurant. The app allows users to browse the menu, place orders, and manage their profile.
+A React Native mobile application for Little Lemon, a family-owned Mediterranean restaurant. The app allows users to log in, browse the menu, and manage their profile.
 
 ## 🚀 Tech Stack
 
 - React Native + Expo SDK  
 - JavaScript
 - SQLite (Expo SQLite)  
-- Figma for UI planning  
+- Figma for UI planning (see the assets folder for the wireframe)
 
 ## 🎨 Features
 
@@ -52,7 +52,7 @@ npx expo start
 ## 🛠 Project Structure
 
 ```
-📁 assets/        # Fonts and images  
+📁 assets/        # Fonts and images, Figma wireframes  
 📁 components/    # Avatar.js, Button.js, Categoryfilter.js, EmailNotifications.js, Footer.js, Header.js, Hero.js, RootNavigator.js
 📁 screens/       # Menu.js, Onboarding.js, Profile.js
 📁 styles/        # typography.js
